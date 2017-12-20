@@ -70,7 +70,7 @@ public class FotoapparatBuilder {
     SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector = Selectors.nothing();
     SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector = Selectors.nothing();
 
-    int jpegQuality;
+    int jpegQuality = 95;
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
 
