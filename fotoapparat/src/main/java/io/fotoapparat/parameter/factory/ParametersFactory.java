@@ -140,7 +140,11 @@ public class ParametersFactory {
             SelectorFunction<Range<T>, T> selector,
             Range<T> capabilities
     ) {
+
         T selectedParameter = selector.select(capabilities);
+        if(capabilities.lowest() == null && capabilities.highest() == null){
+            return selectedParameter; //We avoid the test because capabilities were not read
+        }
         if (!capabilities.contains(selectedParameter)) {
             throw new IllegalArgumentException(
                     "The selected parameter is not in the supported set of values.");
