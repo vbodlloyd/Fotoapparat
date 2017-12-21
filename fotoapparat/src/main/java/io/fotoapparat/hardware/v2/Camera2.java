@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.Capabilities;
 import io.fotoapparat.hardware.operators.AutoFocusOperator;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
@@ -20,7 +21,6 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
-import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.parameter.LensPosition;
@@ -100,14 +100,22 @@ public class Camera2 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
-        previewOperator.startPreview();
+        try {
+            previewOperator.startPreview();
+        }catch (IllegalStateException e) {
+            throw new CameraException("could not start preview");
+        }
     }
 
     @Override
     public void stopPreview() {
         recordMethod();
 
-        previewOperator.stopPreview();
+        try {
+            previewOperator.stopPreview();
+        } catch (IllegalStateException e) {
+            throw new CameraException("could not stop preview");
+        }
     }
 
     @Override
@@ -168,7 +176,11 @@ public class Camera2 implements CameraDevice {
     public Photo takePicture() {
         recordMethod();
 
-        return captureOperator.takePicture();
+        try {
+            return captureOperator.takePicture();
+        }catch (Exception e){
+            throw new CameraException("Could not take picture",e);
+        }
     }
 
     @Override

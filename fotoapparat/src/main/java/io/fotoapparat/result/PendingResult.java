@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.result.adapter.Adapter;
 import io.fotoapparat.result.transformer.Transformer;
 
@@ -95,12 +96,29 @@ public class PendingResult<T> {
             @Override
             public void run() {
                 try {
-                    final T result = getResultUnsafe();
-
-                    notifyCallbackOnMainThread(result, callback);
+                    try {
+                        final T result = future.get();
+                        notifyCallbackOnMainThread(result, callback);
+                    } catch (InterruptedException e) {
+                        throw new CameraException(e);
+                    } catch (ExecutionException e) {
+                        throw new CameraException(e);
+                    }
                 } catch (RecoverableRuntimeException e) {
                     // Ignore
+                } catch (CameraException e) {
+                    notifyCallbackOnMainThread(e, callback);
                 }
+            }
+        });
+    }
+
+    private void notifyCallbackOnMainThread(final CameraException e, final Callback callback) {
+        MAIN_THREAD_HANDLER.post(new Runnable() {
+
+            @Override
+            public void run() {
+                callback.onError(e);
             }
         });
     }
@@ -122,14 +140,6 @@ public class PendingResult<T> {
         });
     }
 
-    private T getResultUnsafe() {
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /**
      * Notified when result becomes available.
      */
@@ -140,6 +150,7 @@ public class PendingResult<T> {
          */
         void onResult(T result);
 
+        void onError(CameraException e);
     }
 
 }

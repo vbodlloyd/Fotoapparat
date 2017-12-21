@@ -234,6 +234,11 @@ public class MainActivity extends AppCompatActivity {
                         imageView.setImageBitmap(result.bitmap);
                         imageView.setRotation(-result.rotationDegrees);
                     }
+
+                    @Override
+                    public void onError(CameraException e) {
+                        Toast.makeText(MainActivity.this, "Error: "+ e.getCause(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 

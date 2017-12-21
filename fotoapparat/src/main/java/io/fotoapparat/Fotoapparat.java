@@ -123,7 +123,7 @@ public class Fotoapparat {
                 cameraErrorCallback
         );
 
-        StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice);
+        StopCameraRoutine stopCameraRoutine = new StopCameraRoutine(cameraDevice, cameraErrorCallback);
 
         OrientationSensor orientationSensor = new OrientationSensor(
                 rotationListener,
