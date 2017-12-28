@@ -142,6 +142,9 @@ public class ParametersFactory {
     ) {
 
         T selectedParameter = selector.select(capabilities);
+        if(selectedParameter == null) {
+            return selectedParameter;
+        }
         if(capabilities.lowest() == null && capabilities.highest() == null){
             return selectedParameter; //We avoid the test because capabilities were not read
         }
