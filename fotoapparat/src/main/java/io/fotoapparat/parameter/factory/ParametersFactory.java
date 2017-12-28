@@ -157,6 +157,11 @@ public class ParametersFactory {
             Set<T> capabilities
     ) {
         T selectedParameter = selector.select(capabilities);
+        if(selectedParameter == null){
+            return null;
+            //We avoid to throw below test because the selector was probably null from Selectors.nothing()
+            //Maybe it was an updateRequest
+        }
         if (!capabilities.contains(selectedParameter)) {
             throw new IllegalArgumentException(
                     "The selected parameter is not in the supported set of values.");
