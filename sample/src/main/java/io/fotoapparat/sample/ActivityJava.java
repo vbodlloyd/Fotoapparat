@@ -194,7 +194,7 @@ public class ActivityJava extends AppCompatActivity {
     }
 
     private void takePicture() {
-        PhotoResult photoResult = fotoapparat.takePicture();
+        PhotoResult photoResult = fotoapparat.takePicture(Fotoapparat.PictureMode.STANDARD);
 
         photoResult.saveToFile(new File(
                 getExternalFilesDir("photos"),

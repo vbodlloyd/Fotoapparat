@@ -2,6 +2,8 @@
 
 package io.fotoapparat.hardware
 
+import android.graphics.Rect
+import android.graphics.YuvImage
 import android.hardware.Camera
 import android.media.MediaRecorder
 import android.view.Surface
@@ -29,6 +31,7 @@ import io.fotoapparat.util.FrameProcessor
 import io.fotoapparat.util.lineSeparator
 import io.fotoapparat.view.Preview
 import kotlinx.coroutines.CompletableDeferred
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -138,6 +141,12 @@ internal open class CameraDevice(
         logger.recordMethod()
 
         return camera.takePhoto(imageOrientation.degrees)
+    }
+
+    open fun takeStillPhoto(): Photo {
+        logger.recordMethod()
+
+        return camera.takeStillPhoto(imageOrientation.degrees)
     }
 
     /**
@@ -420,3 +429,26 @@ private fun Camera.getPreviewResolution(previewOrientation: Orientation): Resolu
 
 private fun Capabilities.canSetFocusingAreas(): Boolean =
         maxMeteringAreas > 0 || maxFocusAreas > 0
+
+private fun Camera.takeStillPhoto(rotation: Int): Photo{
+
+    val latch = CountDownLatch(1)
+    val photoReference = AtomicReference<Photo>()
+    setOneShotPreviewCallback { data, camera ->
+        val parameters = camera.parameters!!
+        val width = parameters.previewSize.width
+        val height = parameters.previewSize.height
+        val (yuvOutputWidth, yuvOutputHeight) = width to height
+        val yuvImage =  YuvImage(data, parameters.previewFormat, yuvOutputWidth, yuvOutputHeight, null);
+        val out =  ByteArrayOutputStream()
+        yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 100, out)
+        photoReference.set(
+                Photo(out.toByteArray(), rotation)
+        )
+
+        latch.countDown()
+
+    }
+    latch.await()
+    return photoReference.get()
+}

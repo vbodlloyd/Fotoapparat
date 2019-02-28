@@ -48,6 +48,10 @@ class Fotoapparat
         private val logger: Logger = none()
 ) {
 
+    enum class PictureMode {
+        STANDARD,
+        STILL
+    }
     private val mainThreadErrorCallback = cameraErrorCallback.onMainThread()
 
     private val display = Display(context)
@@ -109,12 +113,13 @@ class Fotoapparat
      *
      * @return [PhotoResult] which will deliver result asynchronously.
      */
-    fun takePicture(): PhotoResult {
+    fun takePicture(pictureMode : PictureMode = Fotoapparat.PictureMode.STANDARD): PhotoResult {
         logger.recordMethod()
 
         val future = executor.execute(Operation(
                 cancellable = true,
-                function = device::takePhoto
+
+                function = { device.takePhoto(pictureMode) }
         ))
 
         return PhotoResult.fromFuture(future, logger)
