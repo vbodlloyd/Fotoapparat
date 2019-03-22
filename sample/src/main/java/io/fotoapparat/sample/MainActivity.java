@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     private Fotoapparat createFotoapparat(LensPosition position) {
         return Fotoapparat
                 .with(this)
-                .cameraProvider(CameraProviders.v1()) // change this to v2 to test Camera2 API
+                .cameraProvider(CameraProviders.v2(this)) // change this to v2 to test Camera2 API
                 .into(cameraView)
                 .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))
@@ -207,6 +208,12 @@ public class MainActivity extends AppCompatActivity {
                         logcat(),
                         fileLogger(this)
                 ))
+                .frameProcessor(new FrameProcessor() {
+                    @Override
+                    public void processFrame(Frame frame) {
+                        Log.d("FRAMMMMMM", "fghjklfghjkl");
+                    }
+                })
                 .cameraErrorCallback(new CameraErrorCallback() {
                     @Override
                     public void onError(CameraException e) {
