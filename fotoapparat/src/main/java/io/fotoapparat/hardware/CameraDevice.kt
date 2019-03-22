@@ -137,16 +137,16 @@ internal open class CameraDevice(
      *
      * @return The captured photo.
      */
-    open fun takePhoto(): Photo {
+    open fun captureStillPicture(): Photo {
         logger.recordMethod()
 
         return camera.takePhoto(imageOrientation.degrees)
     }
 
-    open fun takeStillPhoto(): Photo {
+    open fun captureScreenshot(): Photo {
         logger.recordMethod()
 
-        return camera.takeStillPhoto(imageOrientation.degrees)
+        return camera.captureScreenshot(imageOrientation.degrees)
     }
 
     /**
@@ -430,7 +430,7 @@ private fun Camera.getPreviewResolution(previewOrientation: Orientation): Resolu
 private fun Capabilities.canSetFocusingAreas(): Boolean =
         maxMeteringAreas > 0 || maxFocusAreas > 0
 
-private fun Camera.takeStillPhoto(rotation: Int): Photo{
+private fun Camera.captureScreenshot(rotation: Int): Photo{
 
     val latch = CountDownLatch(1)
     val photoReference = AtomicReference<Photo>()

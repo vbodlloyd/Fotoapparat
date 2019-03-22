@@ -14,11 +14,9 @@ internal fun Device.takePhoto(pictureMode: Fotoapparat.PictureMode): Photo = run
     val cameraDevice = awaitSelectedCamera()
 
     when(pictureMode){
-        Fotoapparat.PictureMode.STANDARD ->  cameraDevice.takePhoto().also { cameraDevice.startPreviewSafely() }
-        Fotoapparat.PictureMode.STILL -> cameraDevice.takeStillPhoto()
+        Fotoapparat.PictureMode.STANDARD ->  cameraDevice.captureStillPicture().also { cameraDevice.startPreviewSafely() }
+        Fotoapparat.PictureMode.STILL -> cameraDevice.captureScreenshot()
     }
-
-    cameraDevice.takeStillPhoto()
 }
 
 private fun CameraDevice.startPreviewSafely() {
