@@ -82,7 +82,7 @@ public class CaptureRequestFactory {
         Integer jpegQuality = parametersProvider.getJpegQuality();
 
         return CaptureRequestBuilder
-                .create(camera, CameraDevice.TEMPLATE_PREVIEW)
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
@@ -112,7 +112,7 @@ public class CaptureRequestFactory {
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
         return CaptureRequestBuilder
-                .create(camera, CameraDevice.TEMPLATE_PREVIEW)
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
                 .triggerPrecaptureExposure(triggerPrecaptureExposure)
                 .flash(flash)
@@ -139,7 +139,7 @@ public class CaptureRequestFactory {
         Integer jpegQuality = parametersProvider.getJpegQuality();
 
         return CaptureRequestBuilder
-                .create(camera, CameraDevice.TEMPLATE_PREVIEW)
+                .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
                 .cancelPrecaptureExposure(true)
                 .flash(flash)

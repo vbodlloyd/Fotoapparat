@@ -208,12 +208,6 @@ public class MainActivity extends AppCompatActivity {
                         logcat(),
                         fileLogger(this)
                 ))
-                .frameProcessor(new FrameProcessor() {
-                    @Override
-                    public void processFrame(Frame frame) {
-                        Log.d("FRAMMMMMM", "fghjklfghjkl");
-                    }
-                })
                 .cameraErrorCallback(new CameraErrorCallback() {
                     @Override
                     public void onError(CameraException e) {
