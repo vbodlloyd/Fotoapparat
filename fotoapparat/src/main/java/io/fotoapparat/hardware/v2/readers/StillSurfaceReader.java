@@ -98,11 +98,16 @@ public class StillSurfaceReader {
 
         @Override
         public void onImageAvailable(ImageReader reader) {
+            Image image = null;
             try {
-                Image image = reader.acquireLatestImage();
+                image = reader.acquireLatestImage();
                 bytes = imageToBytes(image);
             } catch ( IllegalStateException ex){
                 Log.e("FotoApparat","error during read of an image ",ex);
+            } finally {
+                if(image != null){
+                    image.close();
+                }
             }
             removeListener();
             countDownLatch.countDown();
