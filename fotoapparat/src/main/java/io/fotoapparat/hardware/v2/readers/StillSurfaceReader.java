@@ -5,6 +5,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Surface;
 
 import java.nio.ByteBuffer;
@@ -98,7 +99,11 @@ public class StillSurfaceReader {
         @Override
         public void onImageAvailable(ImageReader reader) {
             Image image = reader.acquireLatestImage();
-            bytes = imageToBytes(image);
+            try {
+                bytes = imageToBytes(image);
+            } catch ( IllegalStateException ex){
+                Log.e("FotoApparat","error during read of an image ",ex);
+            }
             removeListener();
             countDownLatch.countDown();
         }
