@@ -99,13 +99,13 @@ public class StillSurfaceReader {
         public void onImageAvailable(ImageReader reader) {
             Image image = reader.acquireLatestImage();
 
-            reader.close();
-
             bytes = imageToBytes(image);
 
             removeListener();
 
             countDownLatch.countDown();
+
+            reader.close();
         }
 
         private byte[] imageToBytes(Image image) {
