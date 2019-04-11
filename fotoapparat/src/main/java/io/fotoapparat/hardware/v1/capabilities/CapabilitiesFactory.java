@@ -88,12 +88,15 @@ public class CapabilitiesFactory {
 
     private Set<AntiBandingMode> extractAntiBandingModes(CameraParametersDecorator parametersProvider) {
         HashSet<AntiBandingMode> result = new HashSet<>();
-
-        for (String antiBandingMode : parametersProvider.getSupportedAutoBandingModes()) {
-            result.add(
-                    AntiBandingCapability.toAntiBandingMode(antiBandingMode)
-            );
+        List<String> modes = parametersProvider.getSupportedAutoBandingModes();
+        if(modes != null){
+            for (String antiBandingMode : modes) {
+                result.add(
+                        AntiBandingCapability.toAntiBandingMode(antiBandingMode)
+                );
+            }
         }
+
 
         result.add(AntiBandingMode.NONE);
         return result;
