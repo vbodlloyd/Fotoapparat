@@ -101,7 +101,6 @@ public class StillSurfaceReader {
             bytes = imageToBytes(image);
             removeListener();
             countDownLatch.countDown();
-            reader.close();
         }
 
         private byte[] imageToBytes(Image image) {
