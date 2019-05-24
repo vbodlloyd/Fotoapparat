@@ -60,7 +60,7 @@ public class StillSurfaceReader {
                 .newInstance(
                         largestSize.width,
                         largestSize.height,
-                        ImageFormat.JPEG,
+                        ImageFormat.YUV_420_888,
                         1
                 );
 
@@ -82,8 +82,14 @@ public class StillSurfaceReader {
 
         private byte[] getPhoto() {
             Image image = imageReader.acquireLatestImage();
+            Log.d("FORMAT", "format = " +imageReader.getImageFormat() );
             if (image != null) {
                 removeListener();
+                Image.Plane[] planes = image.getPlanes();
+
+                if (planes.length > 0) {
+                    return YUV_420_888toNV21(image);
+                }
                 return imageToBytes(image);
             }
 
@@ -121,6 +127,8 @@ public class StillSurfaceReader {
             Image image = null;
             try {
                 image = reader.acquireLatestImage();
+                Log.d("FORMAT", "format = " +reader.getImageFormat() );
+
                 //bytes = imageToBytes(image);
                 Image.Plane[] planes = image.getPlanes();
 
