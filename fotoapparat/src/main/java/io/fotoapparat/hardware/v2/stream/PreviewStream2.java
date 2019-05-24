@@ -1,7 +1,14 @@
 package io.fotoapparat.hardware.v2.stream;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.YuvImage;
 import android.support.annotation.NonNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -67,6 +74,27 @@ public class PreviewStream2 implements PreviewStream,
 
     private void dispatchFrame(byte[] image) {
         final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0);
+
+       /* byte[] bits = new byte[image.length * 4];
+        for (int i = 0; i <image.length; i++) {
+            bits[i * 4 + 2] = image[i];
+            bits[i * 4 + 1] = image[i];
+            bits[i * 4 + 0] = image[i];
+            bits[i * 4 + 3] = (byte)0xff ;
+        }
+
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();*/
+       //  YuvImage yuvImage = new YuvImage(image, ImageFormat.NV21, parametersProvider.getPreviewSize().width, parametersProvider.getPreviewSize().height, null);
+      //   yuvImage.compressToJpeg(new android.graphics.Rect(0, 0, parametersProvider.getPreviewSize().width, parametersProvider.getPreviewSize().height), 95, outputStream);
+
+        /* Bitmap bmp = BitmapFactory.decodeByteArray(image,0,image.length);
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        /*Bitmap bm = Bitmap.createBitmap(parametersProvider.getPreviewSize().width, parametersProvider.getPreviewSize().height, Bitmap.Config.ARGB_8888);
+        bm.copyPixelsFromBuffer(ByteBuffer.wrap(bits));*/
 
         for (FrameProcessor frameProcessor : frameProcessors) {
             frameProcessor.processFrame(frame);

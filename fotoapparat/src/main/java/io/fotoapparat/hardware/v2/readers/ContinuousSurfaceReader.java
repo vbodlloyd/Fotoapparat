@@ -53,17 +53,31 @@ public class ContinuousSurfaceReader
 
     @Override
     public void onImageAvailable(ImageReader reader) {
-        Image image = reader.acquireNextImage();
+        Image image = reader.acquireLatestImage();
         Image.Plane[] planes = image.getPlanes();
 
         if (planes.length > 0) {
-            byte[] bytes = YUV_420_888toNV21(image);
+            byte[] bytes = imageToBytes(image);
+
 
             if (listener != null) {
                 listener.onFrameAcquired(bytes);
             }
         }
         image.close();
+    }
+
+    private byte[] imageToBytes(Image image) {
+        Image.Plane[] planes = image.getPlanes();
+
+        ByteBuffer buffer = planes[0].getBuffer();
+
+        byte[] result = new byte[buffer.remaining()];
+        buffer.get(result);
+
+        image.close();
+
+        return result;
     }
 
     /**
@@ -85,7 +99,7 @@ public class ContinuousSurfaceReader
                 .newInstance(
                         previewSize.width,
                         previewSize.height,
-                        ImageFormat.YUV_420_888,
+                        ImageFormat.JPEG,
                         1
                 );
 
