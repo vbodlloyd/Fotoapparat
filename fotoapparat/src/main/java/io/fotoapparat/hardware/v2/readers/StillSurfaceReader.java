@@ -60,7 +60,7 @@ public class StillSurfaceReader {
                 .newInstance(
                         largestSize.width,
                         largestSize.height,
-                        ImageFormat.YUV_420_888,
+                        ImageFormat.JPEG,
                         1
                 );
 
@@ -82,14 +82,8 @@ public class StillSurfaceReader {
 
         private byte[] getPhoto() {
             Image image = imageReader.acquireLatestImage();
-            Log.d("FORMAT", "format = " +imageReader.getImageFormat() );
             if (image != null) {
                 removeListener();
-                Image.Plane[] planes = image.getPlanes();
-
-                if (planes.length > 0) {
-                    return YUV_420_888toNV21(image);
-                }
                 return imageToBytes(image);
             }
 
@@ -102,39 +96,12 @@ public class StillSurfaceReader {
             return bytes;
         }
 
-        private static byte[] YUV_420_888toNV21(Image image) {
-            byte[] nv21;
-            ByteBuffer yBuffer = image.getPlanes()[0].getBuffer();
-            ByteBuffer uBuffer = image.getPlanes()[1].getBuffer();
-            ByteBuffer vBuffer = image.getPlanes()[2].getBuffer();
-
-            int ySize = yBuffer.remaining();
-            int uSize = uBuffer.remaining();
-            int vSize = vBuffer.remaining();
-
-            nv21 = new byte[ySize + uSize + vSize];
-
-            //U and V are swapped
-            yBuffer.get(nv21, 0, ySize);
-            vBuffer.get(nv21, ySize, vSize);
-            uBuffer.get(nv21, ySize + vSize, uSize);
-
-            return nv21;
-        }
-
         @Override
         public void onImageAvailable(ImageReader reader) {
             Image image = null;
             try {
                 image = reader.acquireLatestImage();
-                Log.d("FORMAT", "format = " +reader.getImageFormat() );
-
-                //bytes = imageToBytes(image);
-                Image.Plane[] planes = image.getPlanes();
-
-                if (planes.length > 0) {
-                    bytes = YUV_420_888toNV21(image);
-                }
+                bytes = imageToBytes(image);
             } catch ( IllegalStateException ex){
                 Log.e("FotoApparat","error during read of an image ",ex);
             } finally {
