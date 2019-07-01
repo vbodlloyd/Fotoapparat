@@ -1,9 +1,11 @@
 package io.fotoapparat.hardware.v1;
 
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
 
+import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -13,6 +15,7 @@ import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.util.YUVUtil;
 
 /**
  * {@link PreviewStream} of Camera v1.
@@ -109,7 +112,15 @@ public class PreviewStream1 implements PreviewStream {
     private void dispatchFrame(byte[] image) {
         ensurePreviewSizeAvailable();
 
-        final Frame frame = new Frame(previewSize, image, frameOrientation);
+        final Frame frame = new Frame(
+                previewSize,
+                YUVUtil.yuvToGrayscaleRGB(
+                        ByteBuffer.wrap(image),
+                        previewSize.width,
+                        new Rect(0, 0, previewSize.width, previewSize.height)
+                ),
+                frameOrientation
+        );
 
         for (final FrameProcessor frameProcessor : frameProcessors) {
             frameProcessor.processFrame(frame);
