@@ -4,8 +4,7 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.media.Image;
 import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+import android.support.annotation.RequiresApi;
 
 import java.nio.ByteBuffer;
 
