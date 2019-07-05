@@ -4,8 +4,10 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.params.MeteringRectangle;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Surface;
 
 import java.util.List;
@@ -38,6 +40,8 @@ class Request {
     private final Integer sensorSensitivity;
     private final Integer jpegQuality;
     private CaptureRequest.Builder captureRequest;
+    private int width;
+    private int height;
 
     private Request(CameraDevice cameraDevice,
                     int requestTemplate,
@@ -49,7 +53,9 @@ class Request {
                     FocusMode focus,
                     Range<Integer> previewFpsRange,
                     Integer sensorSensitivity,
-                    Integer jpegQuality) {
+                    Integer jpegQuality,
+                    int width,
+                    int height) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -62,6 +68,8 @@ class Request {
         this.previewFpsRange = previewFpsRange;
         this.sensorSensitivity = sensorSensitivity;
         this.jpegQuality = jpegQuality;
+        this.width = width;
+        this.height = height;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -77,7 +85,9 @@ class Request {
                 builder.focus,
                 builder.previewFpsRange,
                 builder.sensorSensitivity,
-                builder.jpegQuality
+                builder.jpegQuality,
+                builder.width,
+                builder.height
         )
                 .build();
     }
@@ -144,9 +154,17 @@ class Request {
         if (!triggerPrecaptureExposure) {
             return;
         }
+
+        MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{new MeteringRectangle(height/2+1,width/2+1,width/3,height/2,MeteringRectangle.METERING_WEIGHT_MAX)};
+        Log.d("SIZE",height + " " + width);
+        captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+        captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS,meteringFocusRectangleList);
+        captureRequest.set(CaptureRequest.CONTROL_AF_REGIONS,meteringFocusRectangleList);
         captureRequest.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_START
         );
+
+
     }
 
     private void cancelPrecaptureExposure() {

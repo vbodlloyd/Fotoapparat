@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v1;
 
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -140,12 +142,15 @@ public class Camera1 implements CameraDevice {
     @Override
     public void startPreview() {
         recordMethod();
-
+        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
+        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
+        camera.getParameters().setMeteringAreas(arrayArea);
         try {
             camera.startPreview();
         } catch (RuntimeException e) {
             throwOnFailStartPreview(e);
         }
+
     }
 
     private void throwOnFailStartPreview(RuntimeException e) {
@@ -190,6 +195,9 @@ public class Camera1 implements CameraDevice {
         camera.setDisplayOrientation(
                 computeDisplayOrientation(degrees, info)
         );
+
+
+
         previewStream.setFrameOrientation(imageRotation);
     }
 
@@ -223,6 +231,16 @@ public class Camera1 implements CameraDevice {
     @Override
     public Parameters getCurrentParameters() {
         Camera.Parameters platformParameters = camera.getParameters();
+
+        //List<Camera.Area> listArea = camera.getParameters().getMeteringAreas();
+        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
+        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
+        platformParameters.setMeteringAreas(arrayArea);
+        camera.getParameters().setMeteringAreas(arrayArea);
+        /*if(!listArea.isEmpty()) {
+            logger.log("BONJOUR " + listArea.get(0).rect.bottom + " " + listArea.get(0).rect.left + " " + listArea.get(0).rect.right + " " + listArea.get(0).rect.top);
+        }*/
+
         return parametersConverter.fromPlatformParameters(
                 new CameraParametersDecorator(platformParameters)
         );
@@ -255,6 +273,10 @@ public class Camera1 implements CameraDevice {
         }
 
         recordMethod();
+
+        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
+        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
+        camera.getParameters().setMeteringAreas(arrayArea);
 
         Capabilities capabilities = capabilitiesFactory.fromParameters(
                 new CameraParametersDecorator(camera.getParameters())
@@ -297,6 +319,8 @@ public class Camera1 implements CameraDevice {
                     }
                 }
         );
+
+
 
         try {
             latch.await();

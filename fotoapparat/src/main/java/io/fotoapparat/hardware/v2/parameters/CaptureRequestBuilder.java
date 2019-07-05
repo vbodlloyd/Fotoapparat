@@ -33,6 +33,8 @@ class CaptureRequestBuilder {
     boolean shouldSetExposureMode;
     Integer sensorSensitivity;
     Integer jpegQuality;
+    int width;
+    int height;
 
     private CaptureRequestBuilder(CameraDevice cameraDevice, @RequestTemplate int requestTemplate) {
         this.cameraDevice = cameraDevice;
@@ -103,6 +105,12 @@ class CaptureRequestBuilder {
 
     CaptureRequestBuilder jpegQuality(Integer jpegQuality) {
         this.jpegQuality = jpegQuality;
+        return this;
+    }
+
+    CaptureRequestBuilder widthAndHeight(int width, int height) {
+        this.width = width;
+        this.height = height;
         return this;
     }
 

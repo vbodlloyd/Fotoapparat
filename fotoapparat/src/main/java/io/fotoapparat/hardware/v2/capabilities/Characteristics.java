@@ -92,6 +92,14 @@ public class Characteristics {
         return hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY;
     }
 
+    public int widthActive(){
+        return cameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE).width();
+    }
+
+    public int heightActive(){
+        return cameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE).height();
+    }
+
     /**
      * Clockwise angle through which the output image needs to be rotated to be
      * upright on the device screen in its native orientation.
