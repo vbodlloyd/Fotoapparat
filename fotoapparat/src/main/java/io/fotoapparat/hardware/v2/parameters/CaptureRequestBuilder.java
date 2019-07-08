@@ -35,6 +35,7 @@ class CaptureRequestBuilder {
     Integer jpegQuality;
     int width;
     int height;
+    boolean hasMeteringAreaSupport;
 
     private CaptureRequestBuilder(CameraDevice cameraDevice, @RequestTemplate int requestTemplate) {
         this.cameraDevice = cameraDevice;
@@ -111,6 +112,11 @@ class CaptureRequestBuilder {
     CaptureRequestBuilder widthAndHeight(int width, int height) {
         this.width = width;
         this.height = height;
+        return this;
+    }
+
+    CaptureRequestBuilder supportMeteringArea(boolean hasMeteringAreaSupport){
+        this.hasMeteringAreaSupport = hasMeteringAreaSupport;
         return this;
     }
 

@@ -42,6 +42,7 @@ class Request {
     private CaptureRequest.Builder captureRequest;
     private int width;
     private int height;
+    private boolean hasMeteringAreaSupport;
 
     private Request(CameraDevice cameraDevice,
                     int requestTemplate,
@@ -55,7 +56,8 @@ class Request {
                     Integer sensorSensitivity,
                     Integer jpegQuality,
                     int width,
-                    int height) {
+                    int height,
+                    boolean supportMeteringArea) {
         this.cameraDevice = cameraDevice;
         this.requestTemplate = requestTemplate;
         this.surfaces = surfaces;
@@ -70,6 +72,7 @@ class Request {
         this.jpegQuality = jpegQuality;
         this.width = width;
         this.height = height;
+        this.hasMeteringAreaSupport = supportMeteringArea;
     }
 
     static CaptureRequest create(CaptureRequestBuilder builder) throws CameraAccessException {
@@ -87,7 +90,8 @@ class Request {
                 builder.sensorSensitivity,
                 builder.jpegQuality,
                 builder.width,
-                builder.height
+                builder.height,
+                builder.hasMeteringAreaSupport
         )
                 .build();
     }
@@ -154,12 +158,13 @@ class Request {
         if (!triggerPrecaptureExposure) {
             return;
         }
-
-        MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{new MeteringRectangle(height/2+1,width/2+1,width/3,height/2,MeteringRectangle.METERING_WEIGHT_MAX)};
         Log.d("SIZE",height + " " + width);
-        captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
-        captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS,meteringFocusRectangleList);
-        captureRequest.set(CaptureRequest.CONTROL_AF_REGIONS,meteringFocusRectangleList);
+
+        if(hasMeteringAreaSupport) {
+            MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{new MeteringRectangle(height / 2 + 1, width / 2 + 1, width / 3, height / 2, MeteringRectangle.METERING_WEIGHT_MAX)};
+            captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+            captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS, meteringFocusRectangleList);
+        }
         captureRequest.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_START
         );

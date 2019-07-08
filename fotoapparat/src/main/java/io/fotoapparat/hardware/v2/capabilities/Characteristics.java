@@ -62,6 +62,14 @@ public class Characteristics {
     }
 
     /**
+     * return true is you can set a metering area on the device
+     * @return boolean
+     */
+    public boolean canHaveManualMetering(){
+        return cameraCharacteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) >= 1 ;
+    }
+
+    /**
      * Whether this camera device has a flash unit.
      *
      * @return {@code true} if the camera's lens has a flash unit.

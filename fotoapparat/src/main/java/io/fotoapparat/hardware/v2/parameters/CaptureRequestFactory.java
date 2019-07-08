@@ -57,6 +57,7 @@ public class CaptureRequestFactory {
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
         int width = cameraConnection.getCharacteristics().widthActive();
         int height = cameraConnection.getCharacteristics().heightActive();
+        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
@@ -67,6 +68,7 @@ public class CaptureRequestFactory {
                 .sensorSensitivity(sensorSensitivity)
                 .jpegQuality(jpegQuality)
                 .widthAndHeight(width,height)
+                .supportMeteringArea(supportMeteringArea)
                 .build();
     }
 

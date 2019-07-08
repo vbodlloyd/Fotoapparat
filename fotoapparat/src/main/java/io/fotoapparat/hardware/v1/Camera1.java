@@ -142,15 +142,21 @@ public class Camera1 implements CameraDevice {
     @Override
     public void startPreview() {
         recordMethod();
-        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
-        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
-        camera.getParameters().setMeteringAreas(arrayArea);
+
+        setMeteringArea();
+
         try {
             camera.startPreview();
         } catch (RuntimeException e) {
             throwOnFailStartPreview(e);
         }
 
+    }
+
+    private void setMeteringArea(){
+        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
+        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
+        camera.getParameters().setMeteringAreas(arrayArea);
     }
 
     private void throwOnFailStartPreview(RuntimeException e) {
@@ -232,15 +238,6 @@ public class Camera1 implements CameraDevice {
     public Parameters getCurrentParameters() {
         Camera.Parameters platformParameters = camera.getParameters();
 
-        //List<Camera.Area> listArea = camera.getParameters().getMeteringAreas();
-        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
-        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
-        platformParameters.setMeteringAreas(arrayArea);
-        camera.getParameters().setMeteringAreas(arrayArea);
-        /*if(!listArea.isEmpty()) {
-            logger.log("BONJOUR " + listArea.get(0).rect.bottom + " " + listArea.get(0).rect.left + " " + listArea.get(0).rect.right + " " + listArea.get(0).rect.top);
-        }*/
-
         return parametersConverter.fromPlatformParameters(
                 new CameraParametersDecorator(platformParameters)
         );
@@ -273,10 +270,6 @@ public class Camera1 implements CameraDevice {
         }
 
         recordMethod();
-
-        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
-        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
-        camera.getParameters().setMeteringAreas(arrayArea);
 
         Capabilities capabilities = capabilitiesFactory.fromParameters(
                 new CameraParametersDecorator(camera.getParameters())
