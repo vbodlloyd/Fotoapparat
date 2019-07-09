@@ -55,6 +55,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private boolean centerExposure = false;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -154,9 +155,11 @@ public class Camera1 implements CameraDevice {
     }
 
     private void setMeteringArea(){
-        ArrayList<Camera.Area> arrayArea = new ArrayList<Camera.Area>();
-        arrayArea.add(new Camera.Area(new Rect(-1,-1,-1,-1),1000));
-        camera.getParameters().setMeteringAreas(arrayArea);
+        if(centerExposure) {
+            ArrayList<Camera.Area> arrayArea = new ArrayList<>();
+            arrayArea.add(new Camera.Area(new Rect(-1, -1, -1, -1), 1000));
+            camera.getParameters().setMeteringAreas(arrayArea);
+        }
     }
 
     private void throwOnFailStartPreview(RuntimeException e) {
@@ -229,6 +232,7 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
+        centerExposure = parameters.getValue(Parameters.Type.CENTER_EXPOSURE);
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;

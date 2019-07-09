@@ -196,11 +196,10 @@ public class MainActivity extends AppCompatActivity {
                         fixed()
                 ))
                 .flash(firstAvailable(
-                        autoRedEye(),
-                        autoFlash(),
                         torch(),
                         off()
                 ))
+                .centerExposure(true)
                 .previewFpsRange(rangeWithHighestFps())
                 .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(new SampleFrameProcessor())

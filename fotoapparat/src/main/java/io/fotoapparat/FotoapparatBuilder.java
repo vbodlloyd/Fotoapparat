@@ -78,6 +78,8 @@ public class FotoapparatBuilder {
 
     Logger logger = Loggers.none();
 
+    boolean centerExposure = false;
+
     CameraErrorCallback cameraErrorCallback = CameraErrorCallback.NULL;
 
     FotoapparatBuilder(@NonNull Context context) {
@@ -205,6 +207,16 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder into(@NonNull CameraRenderer renderer) {
         this.renderer = renderer;
+        return this;
+    }
+
+    /**
+     * if true, force the exposure to the center of the screen if the device allows it
+     * @param centerExposure
+     * @return
+     */
+    public FotoapparatBuilder centerExposure(boolean centerExposure){
+        this.centerExposure = centerExposure;
         return this;
     }
 

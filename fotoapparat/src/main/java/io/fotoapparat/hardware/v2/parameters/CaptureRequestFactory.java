@@ -57,7 +57,7 @@ public class CaptureRequestFactory {
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
         int width = cameraConnection.getCharacteristics().widthActive();
         int height = cameraConnection.getCharacteristics().heightActive();
-        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering();
+        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering() && parametersProvider.getCenterExposure();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
