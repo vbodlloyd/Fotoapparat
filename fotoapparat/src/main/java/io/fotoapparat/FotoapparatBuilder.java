@@ -21,6 +21,7 @@ import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.parameter.selector.FlashSelectors;
 import io.fotoapparat.parameter.selector.SelectorFunction;
 import io.fotoapparat.parameter.selector.Selectors;
+import io.fotoapparat.preview.FramePreProcessor;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraRenderer;
 import io.fotoapparat.view.CameraView;
@@ -73,6 +74,8 @@ public class FotoapparatBuilder {
     int jpegQuality = 95;
 
     ScaleType scaleType = ScaleType.CENTER_CROP;
+
+    FramePreProcessor framePreProcessor = null;
 
     FrameProcessor frameProcessor = null;
 
@@ -169,6 +172,14 @@ public class FotoapparatBuilder {
      */
     public FotoapparatBuilder jpegQuality(@IntRange(from = 0, to = 100) int jpegQuality) {
         this.jpegQuality = jpegQuality;
+        return this;
+    }
+
+    /**
+     * @param framePreprocessor converts frames before forwarding it to the {@link FrameProcessor}.
+     */
+    public FotoapparatBuilder framePreprocessor(@NonNull FramePreProcessor framePreprocessor) {
+        this.framePreProcessor = framePreprocessor;
         return this;
     }
 

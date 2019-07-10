@@ -139,6 +139,7 @@ public class Fotoapparat {
 
         ConfigurePreviewStreamRoutine configurePreviewStreamRoutine = new ConfigurePreviewStreamRoutine(
                 cameraDevice,
+                builder.framePreProcessor,
                 builder.frameProcessor
         );
 

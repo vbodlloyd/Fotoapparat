@@ -1,6 +1,7 @@
 package io.fotoapparat.preview;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Stream of preview frames from the camera.
@@ -13,6 +14,11 @@ public interface PreviewStream {
     PreviewStream NULL = new PreviewStream() {
         @Override
         public void addFrameToBuffer() {
+            // Do nothing
+        }
+
+        @Override
+        public void setPreprocessor(@Nullable FramePreProcessor preProcessor) {
             // Do nothing
         }
 
@@ -36,6 +42,8 @@ public interface PreviewStream {
      * Adds new frame to buffer.
      */
     void addFrameToBuffer();
+
+    void setPreprocessor(@Nullable FramePreProcessor preProcessor);
 
     /**
      * Registers new processor. If processor was already added before, does nothing.

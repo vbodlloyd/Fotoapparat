@@ -1,11 +1,10 @@
 package io.fotoapparat.hardware.v1;
 
 import android.graphics.ImageFormat;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import java.nio.ByteBuffer;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -13,9 +12,9 @@ import java.util.concurrent.Executors;
 
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.preview.Frame;
+import io.fotoapparat.preview.FramePreProcessor;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
-import io.fotoapparat.util.YUVUtil;
 
 /**
  * {@link PreviewStream} of Camera v1.
@@ -26,6 +25,9 @@ public class PreviewStream1 implements PreviewStream {
     private static Executor FRAME_PROCESSORS_EXECUTOR = Executors.newSingleThreadExecutor();
 
     private final Camera camera;
+
+    @Nullable
+    private FramePreProcessor framePreProcessor;
 
     private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 
@@ -73,6 +75,11 @@ public class PreviewStream1 implements PreviewStream {
     }
 
     @Override
+    public void setPreprocessor(@Nullable FramePreProcessor preProcessor) {
+        framePreProcessor = preProcessor;
+    }
+
+    @Override
     public void addProcessor(@NonNull FrameProcessor processor) {
         synchronized (frameProcessors) {
             frameProcessors.add(processor);
@@ -112,13 +119,17 @@ public class PreviewStream1 implements PreviewStream {
     private void dispatchFrame(byte[] image) {
         ensurePreviewSizeAvailable();
 
+        final FramePreProcessor preProcessor = framePreProcessor;
+        final byte[] preProcessedImage;
+        if (preProcessor != null) {
+            preProcessedImage = preProcessor.preProcessFrame(image, previewSize);
+        } else {
+            preProcessedImage = image;
+        }
+
         final Frame frame = new Frame(
                 previewSize,
-                YUVUtil.yuvToGrayscaleRGB(
-                        ByteBuffer.wrap(image),
-                        previewSize.width,
-                        new Rect(0, 0, previewSize.width, previewSize.height)
-                ),
+                preProcessedImage,
                 frameOrientation
         );
 

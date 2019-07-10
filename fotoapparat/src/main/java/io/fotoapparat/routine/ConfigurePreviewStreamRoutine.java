@@ -1,6 +1,7 @@
 package io.fotoapparat.routine;
 
 import io.fotoapparat.hardware.CameraDevice;
+import io.fotoapparat.preview.FramePreProcessor;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
 
@@ -10,11 +11,14 @@ import io.fotoapparat.preview.PreviewStream;
 public class ConfigurePreviewStreamRoutine implements Runnable {
 
     private final CameraDevice cameraDevice;
+    private final FramePreProcessor framePreProcessor;
     private final FrameProcessor frameProcessor;
 
     public ConfigurePreviewStreamRoutine(CameraDevice cameraDevice,
+                                         FramePreProcessor framePreProcessor,
                                          FrameProcessor frameProcessor) {
         this.cameraDevice = cameraDevice;
+        this.framePreProcessor = framePreProcessor;
         this.frameProcessor = frameProcessor;
     }
 
@@ -26,6 +30,7 @@ public class ConfigurePreviewStreamRoutine implements Runnable {
 
         PreviewStream previewStream = cameraDevice.getPreviewStream();
 
+        previewStream.setPreprocessor(framePreProcessor);
         previewStream.addProcessor(frameProcessor);
         previewStream.start();
     }

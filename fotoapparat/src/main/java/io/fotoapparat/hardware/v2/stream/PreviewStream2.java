@@ -1,6 +1,9 @@
 package io.fotoapparat.hardware.v2.stream;
 
+import android.media.Image;
+
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -8,8 +11,10 @@ import java.util.Set;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.preview.Frame;
+import io.fotoapparat.preview.FramePreProcessor;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.util.YUVUtil;
 
 /**
  * {@link PreviewStream} of Camera v2.
@@ -22,6 +27,8 @@ public class PreviewStream2 implements PreviewStream,
     private final ParametersProvider parametersProvider;
     private final Logger logger;
 
+    @Nullable
+    private FramePreProcessor framePreProcessor = null;
     private final Set<FrameProcessor> frameProcessors = new LinkedHashSet<>();
 
     public PreviewStream2(OnImageAcquiredObserver imageAcquiredObserver,
@@ -35,6 +42,11 @@ public class PreviewStream2 implements PreviewStream,
     @Override
     public void addFrameToBuffer() {
         // Does nothing
+    }
+
+    @Override
+    public void setPreprocessor(@Nullable FramePreProcessor preProcessor) {
+        framePreProcessor = preProcessor;
     }
 
     @Override
@@ -54,8 +66,17 @@ public class PreviewStream2 implements PreviewStream,
     @Override
     public void start() {
         imageAcquiredObserver.setListener(this);
+    }
 
-        logger.log("Frame processors are currently not supported in Camera2. To use them please switch to Camera1.");
+    @Override
+    public byte[] onPreProcessFrame(Image frame) {
+        final FramePreProcessor preProcessor = framePreProcessor;
+        if (preProcessor != null) {
+            return preProcessor.preProcessFrame(frame);
+
+        } else {
+            return YUVUtil.imageToByte(frame);
+        }
     }
 
     @Override

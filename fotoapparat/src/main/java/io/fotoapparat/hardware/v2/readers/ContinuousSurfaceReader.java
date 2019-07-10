@@ -39,10 +39,8 @@ public class ContinuousSurfaceReader
         Image.Plane[] planes = image.getPlanes();
 
         if (planes.length > 0) {
-            byte[] bytes = YUVUtil.yuvToGrayscaleRGB(image);
-
             if (listener != null) {
-                listener.onFrameAcquired(bytes);
+                listener.onFrameAcquired(listener.onPreProcessFrame(image));
             }
         }
         image.close();
