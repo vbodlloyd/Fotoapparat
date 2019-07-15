@@ -34,6 +34,7 @@ public class InitialParametersProvider {
     private final SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector;
     private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
     private final int jpegQuality;
+    private final boolean centerExposure;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
@@ -44,6 +45,7 @@ public class InitialParametersProvider {
                                      SelectorFunction<Collection<Range<Integer>>, Range<Integer>> previewFpsRangeSelector,
                                      SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      int jpegQuality,
+                                     boolean centerExposure,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
@@ -55,6 +57,7 @@ public class InitialParametersProvider {
         this.sensorSensitivitySelector = sensorSensitivitySelector;
         this.jpegQuality = jpegQuality;
         this.parametersValidator = parametersValidator;
+        this.centerExposure = centerExposure;
     }
 
     /**
@@ -91,7 +94,8 @@ public class InitialParametersProvider {
                 flashModeParameters(capabilities),
                 previewFpsRange(capabilities),
                 sensorSensitivity(capabilities),
-                jpegQuality()
+                jpegQuality(),
+                centerExposure()
         ));
 
         parametersValidator.validate(parameters);
@@ -161,6 +165,10 @@ public class InitialParametersProvider {
         return ParametersFactory.selectJpegQuality(
                 jpegQuality
         );
+    }
+
+    private Parameters centerExposure(){
+        return ParametersFactory.selectCenterExposure(centerExposure);
     }
 
 }

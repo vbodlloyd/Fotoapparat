@@ -54,14 +54,21 @@ public class CaptureRequestFactory {
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
         Integer jpegQuality = parametersProvider.getJpegQuality();
+        boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
+        int width = cameraConnection.getCharacteristics().widthActive();
+        int height = cameraConnection.getCharacteristics().heightActive();
+        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering() && parametersProvider.getCenterExposure();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_PREVIEW)
                 .into(viewSurface,continuousSurface)
+                .triggerPrecaptureExposure(triggerAutoExposure)
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
                 .sensorSensitivity(sensorSensitivity)
                 .jpegQuality(jpegQuality)
+                .widthAndHeight(width,height)
+                .supportMeteringArea(supportMeteringArea)
                 .build();
     }
 

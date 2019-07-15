@@ -155,7 +155,9 @@ public class Parameters {
         /**
          * JPEG QUALITY. Expected type: {@link Integer}. from 1 to 100
          */
-        JPEG_QUALITY(Integer.class);
+        JPEG_QUALITY(Integer.class),
+
+        CENTER_EXPOSURE(Boolean.class);
 
         private final Class<?> clazz;
 

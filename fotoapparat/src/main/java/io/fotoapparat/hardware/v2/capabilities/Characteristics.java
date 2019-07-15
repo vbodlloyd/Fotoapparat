@@ -62,6 +62,14 @@ public class Characteristics {
     }
 
     /**
+     * return true is you can set a metering area on the device
+     * @return boolean
+     */
+    public boolean canHaveManualMetering(){
+        return cameraCharacteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) >= 1 ;
+    }
+
+    /**
      * Whether this camera device has a flash unit.
      *
      * @return {@code true} if the camera's lens has a flash unit.
@@ -90,6 +98,14 @@ public class Characteristics {
                 .get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL);
 
         return hardwareLevel == CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY;
+    }
+
+    public int widthActive(){
+        return cameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE).width();
+    }
+
+    public int heightActive(){
+        return cameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE).height();
     }
 
     /**

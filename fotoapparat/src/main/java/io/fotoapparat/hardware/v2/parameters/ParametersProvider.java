@@ -9,6 +9,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.parameter.range.Range;
 
+import static io.fotoapparat.parameter.Parameters.Type.CENTER_EXPOSURE;
 import static io.fotoapparat.parameter.Parameters.Type.FLASH;
 import static io.fotoapparat.parameter.Parameters.Type.FOCUS_MODE;
 import static io.fotoapparat.parameter.Parameters.Type.JPEG_QUALITY;
@@ -116,5 +117,9 @@ public class ParametersProvider implements ParametersOperator {
      */
     public Integer getJpegQuality() {
         return selectedParameters.getValue(JPEG_QUALITY);
+    }
+
+    public boolean getCenterExposure() {
+        return selectedParameters.getValue(CENTER_EXPOSURE);
     }
 }

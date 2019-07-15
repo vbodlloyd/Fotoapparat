@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v1;
 
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +55,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
+    private boolean centerExposure = false;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -141,10 +144,21 @@ public class Camera1 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
+        setMeteringArea();
+
         try {
             camera.startPreview();
         } catch (RuntimeException e) {
             throwOnFailStartPreview(e);
+        }
+
+    }
+
+    private void setMeteringArea(){
+        if(centerExposure) {
+            ArrayList<Camera.Area> arrayArea = new ArrayList<>();
+            arrayArea.add(new Camera.Area(new Rect(-1, -1, -1, -1), 1000));
+            camera.getParameters().setMeteringAreas(arrayArea);
         }
     }
 
@@ -190,6 +204,9 @@ public class Camera1 implements CameraDevice {
         camera.setDisplayOrientation(
                 computeDisplayOrientation(degrees, info)
         );
+
+
+
         previewStream.setFrameOrientation(imageRotation);
     }
 
@@ -215,6 +232,7 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
+        centerExposure = parameters.getValue(Parameters.Type.CENTER_EXPOSURE);
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
@@ -223,6 +241,7 @@ public class Camera1 implements CameraDevice {
     @Override
     public Parameters getCurrentParameters() {
         Camera.Parameters platformParameters = camera.getParameters();
+
         return parametersConverter.fromPlatformParameters(
                 new CameraParametersDecorator(platformParameters)
         );
@@ -297,6 +316,8 @@ public class Camera1 implements CameraDevice {
                     }
                 }
         );
+
+
 
         try {
             latch.await();
