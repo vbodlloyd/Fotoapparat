@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import io.fotoapparat.hardware.v2.orientation.OrientationManager;
 import io.fotoapparat.hardware.v2.parameters.ParametersProvider;
 import io.fotoapparat.log.Logger;
 import io.fotoapparat.preview.Frame;
@@ -25,6 +26,7 @@ public class PreviewStream2 implements PreviewStream,
 
     private final OnImageAcquiredObserver imageAcquiredObserver;
     private final ParametersProvider parametersProvider;
+    private final OrientationManager orientationManager;
     private final Logger logger;
 
     @Nullable
@@ -33,9 +35,11 @@ public class PreviewStream2 implements PreviewStream,
 
     public PreviewStream2(OnImageAcquiredObserver imageAcquiredObserver,
                           ParametersProvider parametersProvider,
+                          OrientationManager orientationManager,
                           Logger logger) {
         this.imageAcquiredObserver = imageAcquiredObserver;
         this.parametersProvider = parametersProvider;
+        this.orientationManager = orientationManager;
         this.logger = logger;
     }
 
@@ -87,7 +91,11 @@ public class PreviewStream2 implements PreviewStream,
     }
 
     private void dispatchFrame(byte[] image) {
-        final Frame frame = new Frame(parametersProvider.getPreviewSize(), image, 0);
+        final Frame frame = new Frame(
+                parametersProvider.getPreviewSize(),
+                image,
+                orientationManager.getPhotoOrientation()
+        );
 
         for (FrameProcessor frameProcessor : frameProcessors) {
             frameProcessor.processFrame(frame);
