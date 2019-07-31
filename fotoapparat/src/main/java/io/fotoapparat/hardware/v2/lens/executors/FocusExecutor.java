@@ -32,12 +32,14 @@ public class FocusExecutor implements AutoFocusOperator {
     public FocusResult autoFocus() {
         LensOperation<FocusResult> lensOperation = lensOperationsFactory.createLockFocusOperation();
         FocusResult focusResult = lensOperation.call();
-
-        if (parametersProvider.getFlash() == Flash.ON) {
-            return forceExposureMetering(focusResult);
-        }
-
         return focusResult;
+
+        //WE DISABLE THIS TEST.
+//        if (parametersProvider.getFlash() == Flash.ON) {
+//            return forceExposureMetering(focusResult);
+//        }
+//        //WE ALWAYS CHECK THE METERING AFTER FOCUS
+//        return forceExposureMetering(focusResult);
     }
 
 }

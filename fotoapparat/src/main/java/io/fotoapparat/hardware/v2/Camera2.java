@@ -28,6 +28,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.result.MeteringResult;
 
 /**
  * Camera hardware driver for v2 {@link Camera2} API.
@@ -161,15 +162,13 @@ public class Camera2 implements CameraDevice {
     @Override
     public FocusResult autoFocus() {
         recordMethod();
-
         return autoFocusOperator.autoFocus();
     }
 
     @Override
-    public void measureExposure() {
+    public MeteringResult measureExposure() {
         recordMethod();
-
-        exposureMeasurementOperator.measureExposure();
+        return exposureMeasurementOperator.measureExposure();
     }
 
     @Override

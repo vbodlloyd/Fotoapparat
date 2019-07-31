@@ -109,16 +109,18 @@ class Request {
         setControlMode();
         setTarget();
 
+        setFlash();
+        setExposure();
+        setFocus();
+
         triggerAutoFocus();
         triggerPrecaptureExposure();
         cancelPrecaptureExposure();
 
-        setFlash();
-        setExposure();
-        setFocus();
         setPreviewFpsRange();
         setSensorSensitivity();
         setJpegQuality();
+
 
         return captureRequest.build();
     }
@@ -158,13 +160,10 @@ class Request {
         if (!triggerPrecaptureExposure) {
             return;
         }
-        Log.d("SIZE",height + " " + width);
+        Log.d("FotoApparat","Trigger Precapture Exposure: "+ height + " " + width);
 
-        if(hasMeteringAreaSupport) {
-            MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{new MeteringRectangle(height / 2 + 1, width / 2 + 1, width / 3, height / 2, MeteringRectangle.METERING_WEIGHT_MAX)};
-            captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
-            captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS, meteringFocusRectangleList);
-        }
+
+
         captureRequest.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_START
         );
@@ -180,6 +179,7 @@ class Request {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
+        Log.d("FotoApparat","Cancel Precapture Exposure: "+ height + " " + width);
 
         captureRequest.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                 CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_CANCEL
@@ -205,7 +205,27 @@ class Request {
 
         int autoExposureMode = flashToAutoExposureMode(flash);
 
-        captureRequest.set(CaptureRequest.CONTROL_AE_MODE, autoExposureMode);
+//        if(hasMeteringAreaSupport && shouldSetExposureMode) {
+//            MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{new MeteringRectangle(width/2, height/2, 1, 1, MeteringRectangle.METERING_WEIGHT_MAX)};
+//            captureRequest.set(CaptureRequest.CONTROL_AE_MODE, autoExposureMode);
+//            captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS, meteringFocusRectangleList);
+//            Log.d("Fotoapparat","EXPOSURE SET");
+//        }else{
+            captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+        MeteringRectangle[] meteringFocusRectangleList = new MeteringRectangle[]{
+
+//                new MeteringRectangle(1000, 1000, 10, 10, MeteringRectangle.METERING_WEIGHT_MAX),
+//                new MeteringRectangle( width-1010, height-1010,10, 10, MeteringRectangle.METERING_WEIGHT_MAX),
+                new MeteringRectangle(width/2, height/2, 10, 10, MeteringRectangle.METERING_WEIGHT_MAX)
+
+        };
+        Log.d("FotoApparat","SettingExposureParameters "  + "" + meteringFocusRectangleList[0] +" "+autoExposureMode);
+        //captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+        Log.d("Fotoapparat","SettingExposureParameters "+flash+ hasMeteringAreaSupport + shouldSetExposureMode);
+
+        captureRequest.set(CaptureRequest.CONTROL_AE_REGIONS, meteringFocusRectangleList);
+
+//        }
     }
 
     private void setFocus() {
@@ -221,6 +241,7 @@ class Request {
         if (previewFpsRange == null) {
             return;
         }
+        Log.d("FotoApparat","CONTROL AE FPS RANGE: "+ height + " " + width);
 
         captureRequest.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, RangeConverter.toNativeRange(previewFpsRange));
     }

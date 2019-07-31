@@ -9,6 +9,7 @@ import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.photo.Photo;
+import io.fotoapparat.result.MeteringResult;
 
 /**
  * Takes photo and returns result as {@link Photo}.
@@ -16,6 +17,7 @@ import io.fotoapparat.photo.Photo;
 class TakePictureTask extends FutureTask<Photo> {
 
     private static final int MAX_FOCUS_ATTEMPTS = 3;
+    private static final int MAX_MEASURE_ATTEMPTS = 3;
 
     TakePictureTask(final CameraDevice cameraDevice) {
         super(new Callable<Photo>() {
@@ -43,12 +45,28 @@ class TakePictureTask extends FutureTask<Photo> {
         }
     }
 
+    private static boolean shouldMeasureExposure(CameraDevice cameraDevice) {
+        return false;
+    }
+
     private static boolean shouldFocus(CameraDevice cameraDevice) {
         return currentFocusMode(cameraDevice) != FocusMode.CONTINUOUS_FOCUS;
     }
 
     private static Object currentFocusMode(CameraDevice cameraDevice) {
         return cameraDevice.getCurrentParameters().getValue(Parameters.Type.FOCUS_MODE);
+    }
+
+    private static MeteringResult measureExposure(CameraDevice cameraDevice) {
+        int measureAttempts = 0;
+        MeteringResult measureResult = MeteringResult.failure();
+
+        while (measureAttempts < MAX_MEASURE_ATTEMPTS && !measureResult.succeeded) {
+            measureResult = cameraDevice.measureExposure();
+            measureAttempts++;
+        }
+
+        return measureResult;
     }
 
     private static FocusResult autoFocus(CameraDevice cameraDevice) {

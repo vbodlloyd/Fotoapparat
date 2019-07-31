@@ -23,6 +23,7 @@ import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.result.MeteringResult;
 
 /**
  * Abstraction for camera hardware.
@@ -61,7 +62,7 @@ public interface CameraDevice extends CaptureOperator,
     FocusResult autoFocus();
 
     @Override
-    void measureExposure();
+    MeteringResult measureExposure();
 
     @Override
     Photo takePicture();

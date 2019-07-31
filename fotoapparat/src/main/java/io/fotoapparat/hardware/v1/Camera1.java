@@ -1,6 +1,5 @@
 package io.fotoapparat.hardware.v1;
 
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -9,7 +8,6 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +33,7 @@ import io.fotoapparat.parameter.RendererParameters;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.preview.PreviewStream;
+import io.fotoapparat.result.MeteringResult;
 
 /**
  * Camera hardware driver for v1 {@link Camera} API.
@@ -55,7 +54,7 @@ public class Camera1 implements CameraDevice {
 
     private Throwable lastStacktrace;
     private int imageRotation;
-    private boolean centerExposure = false;
+//    private boolean centerExposure = false;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -144,7 +143,7 @@ public class Camera1 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
-        setMeteringArea();
+//        setMeteringArea();
 
         try {
             camera.startPreview();
@@ -155,11 +154,9 @@ public class Camera1 implements CameraDevice {
     }
 
     private void setMeteringArea(){
-        if(centerExposure) {
-            ArrayList<Camera.Area> arrayArea = new ArrayList<>();
-            arrayArea.add(new Camera.Area(new Rect(-1, -1, -1, -1), 1000));
-            camera.getParameters().setMeteringAreas(arrayArea);
-        }
+//        if(centerExposure) {
+//
+//        }
     }
 
     private void throwOnFailStartPreview(RuntimeException e) {
@@ -232,7 +229,7 @@ public class Camera1 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
-        centerExposure = parameters.getValue(Parameters.Type.CENTER_EXPOSURE);
+//        centerExposure = parameters.getValue(Parameters.Type.CENTER_EXPOSURE);
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
@@ -392,8 +389,9 @@ public class Camera1 implements CameraDevice {
     }
 
     @Override
-    public void measureExposure() {
+    public MeteringResult measureExposure() {
         // Do nothing. Not supported by Camera1.
+        return MeteringResult.success();
     }
 
     @Override

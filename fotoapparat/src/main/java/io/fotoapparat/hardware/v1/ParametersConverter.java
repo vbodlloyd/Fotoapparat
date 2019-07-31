@@ -120,7 +120,13 @@ public class ParametersConverter {
                 applyJpegQuality(
                         (Integer) input.getValue(type),
                         output);
+            case CENTER_EXPOSURE:
+                applyCenterExposure((boolean) input.getValue(type), output);
         }
+    }
+
+    private void applyCenterExposure(boolean value, CameraParametersDecorator output) {
+        output.setExposureCenter(value);
     }
 
     @SuppressWarnings("unchecked")

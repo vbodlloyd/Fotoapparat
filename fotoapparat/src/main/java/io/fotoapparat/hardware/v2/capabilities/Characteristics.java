@@ -4,11 +4,14 @@ import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraMetadata;
+import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.fotoapparat.hardware.v2.parameters.converters.RangeConverter;
@@ -66,6 +69,7 @@ public class Characteristics {
      * @return boolean
      */
     public boolean canHaveManualMetering(){
+        Log.d("Fotoapparat", "metering areas allowed: "+  cameraCharacteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE));
         return cameraCharacteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AE) >= 1 ;
     }
 
@@ -200,5 +204,13 @@ public class Characteristics {
                 .get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE);
 
         return RangeConverter.toFotoapparatRange(sensitivityRange);
+    }
+
+    public void listKeys() {
+        List<CaptureRequest.Key<?>> keys = cameraCharacteristics.getAvailableCaptureRequestKeys();
+        for (int i = 0; i < keys.size(); i++) {
+            Log.d("Fotoapparat","key: " + keys.get(i));
+        }
+
     }
 }

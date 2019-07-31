@@ -39,6 +39,7 @@ import static io.fotoapparat.parameter.selector.AspectRatioSelectors.standardRat
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoFlash;
 import static io.fotoapparat.parameter.selector.FlashSelectors.autoRedEye;
 import static io.fotoapparat.parameter.selector.FlashSelectors.off;
+import static io.fotoapparat.parameter.selector.FlashSelectors.on;
 import static io.fotoapparat.parameter.selector.FlashSelectors.torch;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.autoFocus;
 import static io.fotoapparat.parameter.selector.FocusModeSelectors.continuousFocus;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                                         ? torch()
                                                         : off()
                                         )
+                                        .centerExposure(true)
                                         .build()
                         );
             }
@@ -191,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                         none()
                 ))
                 .focusMode(firstAvailable(
-                        continuousFocus(),
                         autoFocus(),
                         fixed()
                 ))
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                         off()
                 ))
                 .centerExposure(true)
-                .previewFpsRange(rangeWithHighestFps())
+                //.previewFpsRange(rangeWithHighestFps())
                 .sensorSensitivity(highestSensorSensitivity())
                 .frameProcessor(new SampleFrameProcessor())
                 .logger(loggers(
@@ -224,22 +225,22 @@ public class MainActivity extends AppCompatActivity {
                 "photo.jpg"
         ));
 
-        photoResult
-                .toBitmap(scaled(0.25f))
-                .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
-                    @Override
-                    public void onResult(BitmapPhoto result) {
-                        ImageView imageView = (ImageView) findViewById(R.id.result);
-
-                        imageView.setImageBitmap(result.bitmap);
-                        imageView.setRotation(-result.rotationDegrees);
-                    }
-
-                    @Override
-                    public void onError(CameraException e) {
-                        Toast.makeText(MainActivity.this, "Error: "+ e.getCause(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        photoResult
+//                .toBitmap(scaled(0.25f))
+//                .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+//                    @Override
+//                    public void onResult(BitmapPhoto result) {
+//                        ImageView imageView = (ImageView) findViewById(R.id.result);
+//
+//                        imageView.setImageBitmap(result.bitmap);
+//                        imageView.setRotation(-result.rotationDegrees);
+//                    }
+//
+//                    @Override
+//                    public void onError(CameraException e) {
+//                        Toast.makeText(MainActivity.this, "Error: "+ e.getCause(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
 
     private void switchCamera() {

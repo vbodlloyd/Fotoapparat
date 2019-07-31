@@ -133,6 +133,9 @@ class CaptureRequestBuilder {
     }
 
     private void validate() {
+        if(width == 0 || height == 0){
+            throw new IllegalStateException("width and height of sensor is mandatory.");
+        }
         if (surfaces == null || surfaces.isEmpty()) {
             throw new IllegalStateException("Surface is mandatory.");
         }

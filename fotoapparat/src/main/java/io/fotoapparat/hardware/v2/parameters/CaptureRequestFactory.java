@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Surface;
 
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
@@ -46,7 +47,7 @@ public class CaptureRequestFactory {
      * @throws CameraAccessException If the camera device has been disconnected.
      */
     public CaptureRequest createPreviewRequest() throws CameraAccessException {
-
+        Log.d("FOTOAPPARAT","createPreviewRequest");
         CameraDevice camera = cameraConnection.getCamera();
         Surface viewSurface = textureManager.getSurface();
         Surface continuousSurface = continuousSurfaceReader.getSurface();
@@ -69,6 +70,7 @@ public class CaptureRequestFactory {
                 .jpegQuality(jpegQuality)
                 .widthAndHeight(width,height)
                 .supportMeteringArea(supportMeteringArea)
+                .setExposureMode(triggerAutoExposure)
                 .build();
     }
 
@@ -79,7 +81,7 @@ public class CaptureRequestFactory {
      * @throws CameraAccessException If the camera device has been disconnected.
      */
     public CaptureRequest createLockRequest() throws CameraAccessException {
-
+        Log.d("FOTOAPPARAT","createLockRequest");
         CameraDevice camera = cameraConnection.getCamera();
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
@@ -87,6 +89,9 @@ public class CaptureRequestFactory {
         boolean triggerAutoExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
         Integer jpegQuality = parametersProvider.getJpegQuality();
+        int width = cameraConnection.getCharacteristics().widthActive();
+        int height = cameraConnection.getCharacteristics().heightActive();
+        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering() && parametersProvider.getCenterExposure();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
@@ -94,9 +99,11 @@ public class CaptureRequestFactory {
                 .flash(flash)
                 .previewFpsRange(previewFpsRange)
                 .triggerAutoFocus(true)
-                .triggerPrecaptureExposure(triggerAutoExposure)
+//                .triggerPrecaptureExposure(triggerAutoExposure)
                 .sensorSensitivity(sensorSensitivity)
                 .jpegQuality(jpegQuality)
+                .widthAndHeight(width,height)
+//                .supportMeteringArea(supportMeteringArea)
                 .build();
     }
 
@@ -107,7 +114,7 @@ public class CaptureRequestFactory {
      * @throws CameraAccessException If the camera device has been disconnected.
      */
     public CaptureRequest createExposureGatheringRequest() throws CameraAccessException {
-
+        Log.d("FOTOAPPARAT","createExposureGatheringRequest");
         CameraDevice camera = cameraConnection.getCamera();
         Surface surface = textureManager.getSurface();
         Flash flash = parametersProvider.getFlash();
@@ -115,19 +122,24 @@ public class CaptureRequestFactory {
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
         Integer jpegQuality = parametersProvider.getJpegQuality();
+        int width = cameraConnection.getCharacteristics().widthActive();
+        int height = cameraConnection.getCharacteristics().heightActive();
+        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering() && parametersProvider.getCenterExposure();
 
         boolean triggerPrecaptureExposure = !cameraConnection.getCharacteristics().isLegacyDevice();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
-                .triggerPrecaptureExposure(triggerPrecaptureExposure)
                 .flash(flash)
                 .focus(focus)
                 .previewFpsRange(previewFpsRange)
                 .setExposureMode(true)
                 .sensorSensitivity(sensorSensitivity)
                 .jpegQuality(jpegQuality)
+                .widthAndHeight(width,height)
+                .supportMeteringArea(supportMeteringArea)
+                .triggerPrecaptureExposure(triggerPrecaptureExposure)
                 .build();
     }
 
@@ -136,7 +148,7 @@ public class CaptureRequestFactory {
      * @throws CameraAccessException if the camera device has been disconnected.
      */
     public CaptureRequest createCaptureRequest() throws CameraAccessException {
-
+        Log.d("FOTOAPPARAT","createCaptureRequest");
         CameraDevice camera = cameraConnection.getCamera();
         Surface surface = surfaceReader.getSurface();
         Flash flash = parametersProvider.getFlash();
@@ -144,17 +156,22 @@ public class CaptureRequestFactory {
         Range<Integer> previewFpsRange = parametersProvider.getPreviewFpsRange();
         Integer sensorSensitivity = parametersProvider.getSensorSensitivity();
         Integer jpegQuality = parametersProvider.getJpegQuality();
+        int width = cameraConnection.getCharacteristics().widthActive();
+        int height = cameraConnection.getCharacteristics().heightActive();
+//        boolean supportMeteringArea = cameraConnection.getCharacteristics().canHaveManualMetering() && parametersProvider.getCenterExposure();
 
         return CaptureRequestBuilder
                 .create(camera, CameraDevice.TEMPLATE_STILL_CAPTURE)
                 .into(surface)
-                .cancelPrecaptureExposure(true)
+                //.cancelPrecaptureExposure(true)
                 .flash(flash)
                 .focus(focus)
                 .previewFpsRange(previewFpsRange)
                 .sensorSensitivity(sensorSensitivity)
                 .jpegQuality(jpegQuality)
+                .widthAndHeight(width,height)
                 .setExposureMode(true)
+//                .supportMeteringArea(supportMeteringArea)
                 .build();
     }
 

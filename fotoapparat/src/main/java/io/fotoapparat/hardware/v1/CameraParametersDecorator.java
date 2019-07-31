@@ -1,10 +1,12 @@
 package io.fotoapparat.hardware.v1;
 
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -198,6 +200,12 @@ public class CameraParametersDecorator {
         cameraParameters.setJpegQuality(quality);
     }
 
+    public void setExposureCenter(boolean value) {
+        ArrayList<Camera.Area> arrayArea = new ArrayList<>();
+        arrayArea.add(new Camera.Area(new Rect(-1, -1, 0, 0), 1000));
+        cameraParameters.setMeteringAreas(arrayArea);
+    }
+
 
     @Nullable
     private String findExistingKey(@NonNull String[] keys) {
@@ -246,4 +254,6 @@ public class CameraParametersDecorator {
         }
         return integerValues;
     }
+
+
 }

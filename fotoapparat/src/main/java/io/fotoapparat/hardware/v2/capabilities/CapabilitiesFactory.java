@@ -31,10 +31,12 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 
     public CapabilitiesFactory(CameraConnection cameraConnection) {
         this.cameraConnection = cameraConnection;
+
     }
 
     @Override
     public Capabilities getCapabilities() {
+        cameraConnection.getCharacteristics().listKeys();
         return new Capabilities(
                 availableJpegSizes(),
                 availablePreviewSizes(),
