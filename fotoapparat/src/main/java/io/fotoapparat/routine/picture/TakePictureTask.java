@@ -40,7 +40,7 @@ class TakePictureTask extends FutureTask<Photo> {
             FocusResult focusResult = autoFocus(cameraDevice);
 
             if (focusResult.needsExposureMeasurement) {
-                cameraDevice.measureExposure();
+                measureExposure(cameraDevice);
             }
         }
     }

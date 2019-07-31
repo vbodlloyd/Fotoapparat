@@ -1,13 +1,16 @@
 package io.fotoapparat.hardware.v1;
 
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.TextureView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -305,6 +308,10 @@ public class Camera1 implements CameraDevice {
                 new Camera.PictureCallback() {
                     @Override
                     public void onPictureTaken(byte[] data, Camera camera) {
+                        List<Camera.Area> arrayArea = new ArrayList<>();
+                        Camera.Parameters parameters = camera.getParameters();
+                        arrayArea = parameters.getMeteringAreas();
+                        Log.d("Fotoapparat","metering Area after capture: "+ arrayArea.get(0).rect);
                         photoReference.set(
                                 new Photo(data, imageRotation)
                         );

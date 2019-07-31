@@ -5,6 +5,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -201,9 +202,26 @@ public class CameraParametersDecorator {
     }
 
     public void setExposureCenter(boolean value) {
-        ArrayList<Camera.Area> arrayArea = new ArrayList<>();
-        arrayArea.add(new Camera.Area(new Rect(-1, -1, 0, 0), 1000));
-        cameraParameters.setMeteringAreas(arrayArea);
+        Log.d("Fotoapparat","parameters: "+cameraParameters.flatten());
+        String[] allPArams = cameraParameters.flatten().split(";");
+        for (int i = 0; i < allPArams.length; i++) {
+            Log.d("Fotoapparat", "param: "+ allPArams[i]);
+        }
+        if(value){
+            if(cameraParameters.get("auto-exposure") != null){
+                Log.d("Fotoapparat", "auto-exposure parameter exists");
+                if(cameraParameters.get("auto-exposure-values") != null){
+                    Log.d("Fotoapparat", "auto-exposure-values parameter exists");
+                    Log.d("Fotoapparat", "auto-exposure-values: " + cameraParameters.get("auto-exposure-values"));
+                }
+                cameraParameters.set("auto-exposure","spot-metering");
+            }else{
+                Log.d("Fotoapparat", "auto-exposure parameter does not exist");
+            }
+            ArrayList<Camera.Area> arrayArea = new ArrayList<>();
+            arrayArea.add(new Camera.Area(new Rect(0, 0, 10, 10), 800));
+            cameraParameters.setMeteringAreas(arrayArea);
+        }
     }
 
 

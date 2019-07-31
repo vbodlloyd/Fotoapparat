@@ -35,8 +35,8 @@ public class UpdateParametersRoutine {
                 combineParameters(asList(
                         flashModeParameters(request, capabilities),
                         antiBandingModeParameters(request, capabilities),
-                        focusModeParameters(request, capabilities),
-                        centerExposureParameters(request)
+                        focusModeParameters(request, capabilities)
+                        //centerExposureParameters(request)
                 ))
         );
     }
