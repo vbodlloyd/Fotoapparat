@@ -1,5 +1,6 @@
 package io.fotoapparat.hardware.v2;
 
+import android.hardware.Camera;
 import android.os.Build;
 import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
@@ -21,8 +22,10 @@ import io.fotoapparat.hardware.operators.PreviewOperator;
 import io.fotoapparat.hardware.operators.RendererParametersOperator;
 import io.fotoapparat.hardware.operators.SurfaceOperator;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
+import io.fotoapparat.hardware.v1.capabilities.FlashCapability;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
@@ -100,11 +103,31 @@ public class Camera2 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
+       // triggerFlashMode();
+
         try {
+
             previewOperator.startPreview();
         }catch (IllegalStateException e) {
             throw new CameraException("could not start preview");
         }
+    }
+
+    /**
+     * disable the flash and enabled it again to launch it again (some device disable the torch after the photo is taken)
+     * //DONT WORK
+     */
+    private void triggerFlashMode(){
+
+        Parameters parameters = currentParameters;
+        Flash flashWanted = parameters.getValue(Parameters.Type.FLASH);
+        Flash flashNone = FlashCapability.toFlash(Camera.Parameters.FLASH_MODE_OFF);
+
+        parameters.putValue(Parameters.Type.FLASH,flashNone);
+        updateParameters(parameters);
+
+        parameters.putValue(Parameters.Type.FLASH,flashWanted);
+        updateParameters(parameters);
     }
 
     @Override

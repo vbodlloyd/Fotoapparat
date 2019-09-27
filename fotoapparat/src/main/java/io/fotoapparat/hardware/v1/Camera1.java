@@ -23,12 +23,14 @@ import io.fotoapparat.hardware.orientation.OrientationUtils;
 import io.fotoapparat.hardware.provider.AvailableLensPositionsProvider;
 import io.fotoapparat.hardware.provider.V1AvailableLensPositionProvider;
 import io.fotoapparat.hardware.v1.capabilities.CapabilitiesFactory;
+import io.fotoapparat.hardware.v1.capabilities.FlashCapability;
 import io.fotoapparat.hardware.v1.parameters.SplitParametersOperator;
 import io.fotoapparat.hardware.v1.parameters.SupressExceptionsParametersOperator;
 import io.fotoapparat.hardware.v1.parameters.SwitchOnFailureParametersOperator;
 import io.fotoapparat.hardware.v1.parameters.UnsafeParametersOperator;
 import io.fotoapparat.lens.FocusResult;
 import io.fotoapparat.log.Logger;
+import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.LensPosition;
 import io.fotoapparat.parameter.Parameters;
 import io.fotoapparat.parameter.RendererParameters;
@@ -146,12 +148,30 @@ public class Camera1 implements CameraDevice {
 
         setMeteringArea();
 
+        triggerFlashMode();
+
         try {
             camera.startPreview();
         } catch (RuntimeException e) {
             throwOnFailStartPreview(e);
         }
 
+    }
+
+    /**
+     * disable the flash and enabled it again to launch it again (some device disable the torch after the photo is taken)
+     */
+    private void triggerFlashMode(){
+
+        Parameters parameters = getCurrentParameters();
+        Flash flashWanted = parameters.getValue(Parameters.Type.FLASH);
+        Flash flashNone = FlashCapability.toFlash(Camera.Parameters.FLASH_MODE_OFF);
+
+        parameters.putValue(Parameters.Type.FLASH,flashNone);
+        parametersOperator().updateParameters(parameters);
+
+        parameters.putValue(Parameters.Type.FLASH,flashWanted);
+        parametersOperator().updateParameters(parameters);
     }
 
     private void setMeteringArea(){

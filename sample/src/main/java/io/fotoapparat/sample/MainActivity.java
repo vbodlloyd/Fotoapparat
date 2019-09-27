@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     private Fotoapparat createFotoapparat(LensPosition position) {
         return Fotoapparat
                 .with(this)
-                .cameraProvider(CameraProviders.v2(this)) // change this to v2 to test Camera2 API
+                .cameraProvider(CameraProviders.v1()) // change this to v2 to test Camera2 API
                 .into(cameraView)
                 .previewScaleType(ScaleType.CENTER_CROP)
                 .photoSize(standardRatio(biggestSize()))
