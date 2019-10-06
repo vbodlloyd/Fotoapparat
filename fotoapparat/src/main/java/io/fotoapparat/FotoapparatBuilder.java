@@ -83,6 +83,8 @@ public class FotoapparatBuilder {
 
     boolean centerExposure = false;
 
+    boolean reinitFlash = false;
+
     CameraErrorCallback cameraErrorCallback = CameraErrorCallback.NULL;
 
     FotoapparatBuilder(@NonNull Context context) {
@@ -231,6 +233,15 @@ public class FotoapparatBuilder {
         return this;
     }
 
+    /**
+     * if true, force the flash to reinit itself after a picture is taken
+     * @param reinitFlash
+     * @return
+     */
+    public FotoapparatBuilder reinitFlash(boolean reinitFlash){
+        this.reinitFlash = reinitFlash;
+        return this;
+    }
     /**
      * @return set up instance of {@link Fotoapparat}.
      * @throws IllegalStateException if some mandatory parameters are not specified.

@@ -136,6 +136,13 @@ public class ParametersFactory {
         );
     }
 
+    public static Parameters selectReinitFlash(boolean reinitFlash) {
+        return new Parameters().putValue(
+                Parameters.Type.REINIT_FLASH,
+                reinitFlash
+        );
+    }
+
     private static Integer ensureJpegQualityRange(int jpegQuality) {
         if (jpegQuality < 1 || 100 < jpegQuality) {
             throw new IllegalArgumentException("Jpeg quality was not in 0-100 range.");

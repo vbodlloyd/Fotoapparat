@@ -35,6 +35,7 @@ public class InitialParametersProvider {
     private final SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector;
     private final int jpegQuality;
     private final boolean centerExposure;
+    private final boolean reinitFlash;
 
     public InitialParametersProvider(CapabilitiesOperator capabilitiesOperator,
                                      SelectorFunction<Collection<Size>, Size> photoSizeSelector,
@@ -46,6 +47,7 @@ public class InitialParametersProvider {
                                      SelectorFunction<Range<Integer>, Integer> sensorSensitivitySelector,
                                      int jpegQuality,
                                      boolean centerExposure,
+                                     boolean reinitFlash,
                                      InitialParametersValidator parametersValidator) {
         this.capabilitiesOperator = capabilitiesOperator;
         this.photoSizeSelector = photoSizeSelector;
@@ -58,6 +60,7 @@ public class InitialParametersProvider {
         this.jpegQuality = jpegQuality;
         this.parametersValidator = parametersValidator;
         this.centerExposure = centerExposure;
+        this.reinitFlash = reinitFlash;
     }
 
     /**
@@ -95,7 +98,8 @@ public class InitialParametersProvider {
                 previewFpsRange(capabilities),
                 sensorSensitivity(capabilities),
                 jpegQuality(),
-                centerExposure()
+                centerExposure(),
+                reinitFlash()
         ));
 
         parametersValidator.validate(parameters);
@@ -169,6 +173,10 @@ public class InitialParametersProvider {
 
     private Parameters centerExposure(){
         return ParametersFactory.selectCenterExposure(centerExposure);
+    }
+
+    private Parameters reinitFlash(){
+        return ParametersFactory.selectReinitFlash(reinitFlash);
     }
 
 }

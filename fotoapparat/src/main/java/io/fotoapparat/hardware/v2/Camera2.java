@@ -55,6 +55,8 @@ public class Camera2 implements CameraDevice {
     private CountDownLatch currentParametersLatch;
     private Parameters currentParameters;
 
+    private boolean reinitFlash = false;
+
     public Camera2(Logger logger,
                    ConnectionOperator connectionOperator,
                    PreviewOperator previewOperator,
@@ -103,7 +105,9 @@ public class Camera2 implements CameraDevice {
     public void startPreview() {
         recordMethod();
 
-       // triggerFlashMode();
+        if(reinitFlash) {
+            triggerFlashMode();
+        }
 
         try {
 
@@ -114,19 +118,14 @@ public class Camera2 implements CameraDevice {
     }
 
     /**
-     * disable the flash and enabled it again to launch it again (some device disable the torch after the photo is taken)
-     * //DONT WORK
+     * disable the flash to allow camera2 to re enable the torch mode after
      */
     private void triggerFlashMode(){
 
         Parameters parameters = currentParameters;
-        Flash flashWanted = parameters.getValue(Parameters.Type.FLASH);
         Flash flashNone = FlashCapability.toFlash(Camera.Parameters.FLASH_MODE_OFF);
 
-        parameters.putValue(Parameters.Type.FLASH,flashNone);
-        updateParameters(parameters);
-
-        parameters.putValue(Parameters.Type.FLASH,flashWanted);
+        parameters.putValue(Parameters.Type.FLASH, flashNone);
         updateParameters(parameters);
     }
 
@@ -159,6 +158,7 @@ public class Camera2 implements CameraDevice {
     public void updateParameters(Parameters parameters) {
         recordMethod();
 
+        reinitFlash = parameters.getValue(Parameters.Type.REINIT_FLASH);
         parametersOperator.updateParameters(parameters);
         currentParameters = parameters;
         currentParametersLatch.countDown();

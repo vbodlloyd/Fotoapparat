@@ -157,7 +157,9 @@ public class Parameters {
          */
         JPEG_QUALITY(Integer.class),
 
-        CENTER_EXPOSURE(Boolean.class);
+        CENTER_EXPOSURE(Boolean.class),
+
+        REINIT_FLASH(Boolean.class);
 
         private final Class<?> clazz;
 
