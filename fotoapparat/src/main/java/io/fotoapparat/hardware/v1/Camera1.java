@@ -58,6 +58,7 @@ public class Camera1 implements CameraDevice {
     private Throwable lastStacktrace;
     private int imageRotation;
     private boolean centerExposure = false;
+    private boolean reinitFlash = false;
 
     @Nullable
     private Capabilities cachedCapabilities = null;
@@ -162,16 +163,18 @@ public class Camera1 implements CameraDevice {
      * disable the flash and enabled it again to launch it again (some device disable the torch after the photo is taken)
      */
     private void triggerFlashMode(){
+        if(reinitFlash) {
+            Parameters parameters = getCurrentParameters();
 
-        Parameters parameters = getCurrentParameters();
-        Flash flashWanted = parameters.getValue(Parameters.Type.FLASH);
-        Flash flashNone = FlashCapability.toFlash(Camera.Parameters.FLASH_MODE_OFF);
+            Flash flashWanted = parameters.getValue(Parameters.Type.FLASH);
+            Flash flashNone = FlashCapability.toFlash(Camera.Parameters.FLASH_MODE_OFF);
 
-        parameters.putValue(Parameters.Type.FLASH,flashNone);
-        parametersOperator().updateParameters(parameters);
+            parameters.putValue(Parameters.Type.FLASH, flashNone);
+            parametersOperator().updateParameters(parameters);
 
-        parameters.putValue(Parameters.Type.FLASH,flashWanted);
-        parametersOperator().updateParameters(parameters);
+            parameters.putValue(Parameters.Type.FLASH, flashWanted);
+            parametersOperator().updateParameters(parameters);
+        }
     }
 
     private void setMeteringArea(){
@@ -253,6 +256,7 @@ public class Camera1 implements CameraDevice {
         recordMethod();
 
         centerExposure = parameters.getValue(Parameters.Type.CENTER_EXPOSURE);
+        reinitFlash = parameters.getValue(Parameters.Type.REINIT_FLASH);
         parametersOperator().updateParameters(parameters);
 
         cachedZoomParameters = null;
