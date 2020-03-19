@@ -12,6 +12,7 @@ import android.view.Surface;
 
 import java.util.List;
 
+import io.fotoapparat.hardware.CameraException;
 import io.fotoapparat.hardware.v2.parameters.converters.RangeConverter;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
@@ -103,24 +104,32 @@ class Request {
      * @throws CameraAccessException If the camera device has been disconnected.
      */
     CaptureRequest build() throws CameraAccessException {
-        captureRequest = cameraDevice.createCaptureRequest(requestTemplate);
+        try {
+            captureRequest = cameraDevice.createCaptureRequest(requestTemplate);
 
-        setCaptureIntent();
-        setControlMode();
-        setTarget();
+            setCaptureIntent();
+            setControlMode();
+            setTarget();
 
-        triggerAutoFocus();
-        triggerPrecaptureExposure();
-        cancelPrecaptureExposure();
+            triggerAutoFocus();
+            triggerPrecaptureExposure();
+            cancelPrecaptureExposure();
 
-        setFlash();
-        setExposure();
-        setFocus();
-        setPreviewFpsRange();
-        setSensorSensitivity();
-        setJpegQuality();
+            setFlash();
+            setExposure();
+            setFocus();
+            setPreviewFpsRange();
+            setSensorSensitivity();
+            setJpegQuality();
 
-        return captureRequest.build();
+            return captureRequest.build();
+        } catch (IllegalStateException e){
+            if( e.getMessage().contains("was already closed")){
+                throw new CameraException(e);
+            } else {
+                throw e;
+            }
+        }
     }
 
     private void setCaptureIntent() {
