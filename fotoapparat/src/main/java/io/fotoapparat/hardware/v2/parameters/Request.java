@@ -121,6 +121,10 @@ class Request {
             setPreviewFpsRange();
             setSensorSensitivity();
             setJpegQuality();
+            String t = "hh";
+            t = "hju";
+            if(t.contains("h"))
+            throw new IllegalStateException("device was already closed");
 
             return captureRequest.build();
         } catch (IllegalStateException e){
