@@ -2,6 +2,7 @@ package io.fotoapparat.parameter.selector;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.util.CompareSizesByArea;
@@ -24,7 +25,14 @@ public class SizeSelectors {
                     return null;
                 }
 
-                return Collections.max(items, COMPARATOR_BY_AREA);
+                Collection<Size> itemsGoodSize = new HashSet<>();
+                for (Size item : items) {
+                    if (item.width <= 5000) {
+                        itemsGoodSize.add(item);
+                    }
+                }
+
+                return Collections.max(itemsGoodSize, COMPARATOR_BY_AREA);
             }
         };
     }
