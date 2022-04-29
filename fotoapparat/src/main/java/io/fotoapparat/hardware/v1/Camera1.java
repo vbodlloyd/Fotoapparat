@@ -333,7 +333,8 @@ public class Camera1 implements CameraDevice {
                     @Override
                     public void onPictureTaken(byte[] data, Camera camera) {
                         photoReference.set(
-                                new Photo(data, imageRotation)
+                                // null metadata: lens position always set to `infinity` in Camera 1 anyway
+                                new Photo(data, imageRotation, null)
                         );
 
                         latch.countDown();

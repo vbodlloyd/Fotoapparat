@@ -36,7 +36,8 @@ public class BitmapPhotoTransformer implements Transformer<Photo, BitmapPhoto> {
 
         return new BitmapPhoto(
                 bitmap,
-                input.rotationDegrees
+                input.rotationDegrees,
+                input.getMetadata()
         );
     }
 

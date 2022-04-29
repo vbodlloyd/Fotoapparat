@@ -4,6 +4,7 @@ import android.hardware.camera2.CaptureResult;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
+import io.fotoapparat.lens.CaptureMetadata;
 import io.fotoapparat.lens.CaptureResultState;
 import io.fotoapparat.lens.ExposureResultState;
 import io.fotoapparat.result.transformer.Transformer;
@@ -16,7 +17,7 @@ public class CaptureResultTransformer implements Transformer<CaptureResult, Capt
 
     @Override
     public CaptureResultState transform(CaptureResult input) {
-        return CaptureResultState.SUCCESS;
+        return CaptureResultState.Success(new CaptureMetadata(input.get(CaptureResult.LENS_FOCUS_DISTANCE)));
     }
 
 }

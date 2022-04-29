@@ -1,6 +1,11 @@
 package io.fotoapparat.photo;
 
+import android.support.annotation.Nullable;
+
 import java.util.Arrays;
+import java.util.Objects;
+
+import io.fotoapparat.lens.CaptureMetadata;
 
 /**
  * Taken photo.
@@ -20,17 +25,27 @@ public class Photo {
      */
     public final int rotationDegrees;
 
+    @Nullable
+    private final CaptureMetadata metadata;
+
     public Photo(byte[] encodedImage,
-                 int rotationDegrees) {
+                 int rotationDegrees,
+                 @Nullable final CaptureMetadata metadata) {
         this.encodedImage = encodedImage;
         this.rotationDegrees = rotationDegrees;
+        this.metadata = metadata;
     }
 
     /**
      * @return empty {@link Photo}.
      */
     public static Photo empty() {
-        return new Photo(new byte[0], 0);
+        return new Photo(new byte[0], 0, null);
+    }
+
+    @Nullable
+    public CaptureMetadata getMetadata() {
+        return metadata;
     }
 
     @Override
@@ -41,13 +56,14 @@ public class Photo {
         Photo photo = (Photo) o;
 
         return rotationDegrees == photo.rotationDegrees
-                && Arrays.equals(encodedImage, photo.encodedImage);
+                && Arrays.equals(encodedImage, photo.encodedImage)
+                && Objects.equals(metadata, photo.metadata);
     }
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(encodedImage);
-        result = 31 * result + rotationDegrees;
+        int result = Objects.hash(rotationDegrees, metadata);
+        result = 31 * result + Arrays.hashCode(encodedImage);
         return result;
     }
 

@@ -179,7 +179,7 @@ public class Camera2Test {
     @Test
     public void takePicture() throws Exception {
         // Given
-        Photo photo = new Photo(new byte[0], 0);
+        Photo photo = new Photo(new byte[0], 0, null);
         given(captureOperator.takePicture())
                 .willReturn(photo);
 
