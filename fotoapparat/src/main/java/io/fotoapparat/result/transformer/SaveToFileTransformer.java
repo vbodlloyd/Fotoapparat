@@ -6,13 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.fotoapparat.lens.CaptureMetadata;
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.util.ExifOrientationWriter;
 
 /**
  * Saves {@link Photo} to file.
  */
-public class SaveToFileTransformer implements Transformer<Photo, Void> {
+public class SaveToFileTransformer implements Transformer<Photo, CaptureMetadata> {
 
     private final File file;
     private final ExifOrientationWriter exifOrientationWriter;
@@ -34,7 +35,7 @@ public class SaveToFileTransformer implements Transformer<Photo, Void> {
     }
 
     @Override
-    public Void transform(Photo input) {
+    public CaptureMetadata transform(Photo input) {
         BufferedOutputStream outputStream = outputStream();
 
         try {
@@ -45,7 +46,7 @@ public class SaveToFileTransformer implements Transformer<Photo, Void> {
             throw new FileSaveException(e);
         }
 
-        return null;
+        return input.getMetadata();
     }
 
     private void saveImage(Photo input, BufferedOutputStream outputStream) throws IOException {

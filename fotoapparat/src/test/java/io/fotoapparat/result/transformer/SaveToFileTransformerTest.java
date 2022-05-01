@@ -1,5 +1,9 @@
 package io.fotoapparat.result.transformer;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +15,6 @@ import java.io.File;
 
 import io.fotoapparat.photo.Photo;
 import io.fotoapparat.util.ExifOrientationWriter;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SaveToFileTransformerTest {
@@ -41,7 +41,8 @@ public class SaveToFileTransformerTest {
         // Given
         Photo photo = new Photo(
                 new byte[]{1, 2, 3},
-                0
+                0,
+                null
         );
 
         // When

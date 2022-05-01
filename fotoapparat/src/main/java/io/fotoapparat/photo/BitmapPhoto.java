@@ -1,6 +1,9 @@
 package io.fotoapparat.photo;
 
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
+
+import io.fotoapparat.lens.CaptureMetadata;
 
 /**
  * Photo as {@link Bitmap}.
@@ -17,9 +20,19 @@ public class BitmapPhoto {
      */
     public final int rotationDegrees;
 
+    @Nullable
+    private final CaptureMetadata metadata;
+
     public BitmapPhoto(Bitmap bitmap,
-                       int rotationDegrees) {
+                       int rotationDegrees,
+                       @Nullable final CaptureMetadata metadata) {
         this.bitmap = bitmap;
         this.rotationDegrees = rotationDegrees;
+        this.metadata = metadata;
+    }
+
+    @Nullable
+    public CaptureMetadata getMetadata() {
+        return metadata;
     }
 }

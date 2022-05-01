@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import java.io.File;
 import java.util.concurrent.Future;
 
+import io.fotoapparat.lens.CaptureMetadata;
 import io.fotoapparat.parameter.Size;
 import io.fotoapparat.photo.BitmapPhoto;
 import io.fotoapparat.photo.Photo;
@@ -65,7 +66,7 @@ public class PhotoResult {
      *
      * @return pending operation which completes when photo is saved to file.
      */
-    public PendingResult<Void> saveToFile(File file) {
+    public PendingResult<CaptureMetadata> saveToFile(File file) {
         return pendingResult
                 .transform(SaveToFileTransformer.create(file));
     }

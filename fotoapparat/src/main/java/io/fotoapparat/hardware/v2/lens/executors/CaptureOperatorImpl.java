@@ -30,11 +30,12 @@ public class CaptureOperatorImpl implements CaptureOperator {
     public Photo takePicture() {
         LensOperation<CaptureResultState> captureOperation = lensOperationsFactory.createCaptureOperation();
 
-        captureOperation.call();
+        final CaptureResultState captureResult = captureOperation.call();
 
         return new Photo(
                 stillSurfaceReader.getPhotoBytes(),
-                orientationManager.getPhotoOrientation()
+                orientationManager.getPhotoOrientation(),
+                captureResult.getMetadata()
         );
     }
 }
