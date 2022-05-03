@@ -6,6 +6,7 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraMetadata;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import java.util.HashSet;
@@ -86,6 +87,11 @@ public class Characteristics {
     public boolean isFixedFocusLens() {
         Float focusDistance = cameraCharacteristics.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
         return focusDistance == 0f;
+    }
+
+    @Nullable
+    public Float getLensMinFocusDistance() {
+        return cameraCharacteristics.get(CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE);
     }
 
     /**

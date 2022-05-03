@@ -1,7 +1,10 @@
 package io.fotoapparat.hardware.v2.capabilities;
 
+import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
+
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import java.util.Collections;
@@ -9,17 +12,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.fotoapparat.hardware.Capabilities;
-import io.fotoapparat.hardware.v2.parameters.converters.AntiBandingConverter;
-import io.fotoapparat.parameter.AntiBandingMode;
-import io.fotoapparat.parameter.range.Range;
 import io.fotoapparat.hardware.operators.CapabilitiesOperator;
 import io.fotoapparat.hardware.v2.connection.CameraConnection;
+import io.fotoapparat.hardware.v2.parameters.converters.AntiBandingConverter;
 import io.fotoapparat.hardware.v2.parameters.converters.FocusConverter;
+import io.fotoapparat.parameter.AntiBandingMode;
 import io.fotoapparat.parameter.Flash;
 import io.fotoapparat.parameter.FocusMode;
 import io.fotoapparat.parameter.Size;
-
-import static io.fotoapparat.hardware.v2.parameters.converters.FlashConverter.exposureModeToFlash;
+import io.fotoapparat.parameter.range.Range;
 
 /**
  * Creates the {@link Capabilities} of a {@link io.fotoapparat.hardware.v2.Camera2}.
@@ -43,7 +44,8 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
                 availableFlashModes(),
                 availablePreviewFpsRanges(),
 				availableSensorSensitivity(),
-                false
+                false,
+                getLensMinFocusDistance()
         );
     }
 
@@ -123,6 +125,11 @@ public class CapabilitiesFactory implements CapabilitiesOperator {
 	private Range<Integer> availableSensorSensitivity() {
 		return characteristics().getSensorSensitivityRange();
 	}
+
+    @Nullable
+    private Float getLensMinFocusDistance() {
+        return characteristics().getLensMinFocusDistance();
+    }
 
 	private Characteristics characteristics() {
         return cameraConnection.getCharacteristics();
