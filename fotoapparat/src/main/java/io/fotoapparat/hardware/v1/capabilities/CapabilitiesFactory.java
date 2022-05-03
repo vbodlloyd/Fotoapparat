@@ -37,7 +37,8 @@ public class CapabilitiesFactory {
                 extractFlashModes(parametersProvider),
                 extractPreviewFpsRanges(parametersProvider),
                 extractSensorSensitivityRange(parametersProvider),
-                parametersProvider.isZoomSupported()
+                parametersProvider.isZoomSupported(),
+                null // Value not available (and not used) on Camera1
         );
     }
 

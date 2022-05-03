@@ -1,6 +1,7 @@
 package io.fotoapparat.hardware;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Set;
@@ -31,6 +32,8 @@ public class Capabilities {
     private final Set<Range<Integer>> previewFpsRanges;
     @NonNull
     private final Range<Integer> sensorSensitivityRange;
+    @Nullable
+    private final Float lensMinFocusDistance;
 
     private final boolean zoomSupported;
 
@@ -41,7 +44,8 @@ public class Capabilities {
                         @NonNull Set<Flash> flashModes,
                         @NonNull Set<Range<Integer>> previewFpsRanges,
                         @NonNull Range<Integer> sensorSensitivityRange,
-                        boolean zoomSupported) {
+                        boolean zoomSupported,
+                        @Nullable final Float lensMinFocusDistance) {
         this.photoSizes = photoSizes;
         this.previewSizes = previewSizes;
         this.antiBandingModes = antiBandingModes;
@@ -50,6 +54,7 @@ public class Capabilities {
         this.previewFpsRanges = previewFpsRanges;
         this.sensorSensitivityRange = sensorSensitivityRange;
         this.zoomSupported = zoomSupported;
+        this.lensMinFocusDistance = lensMinFocusDistance;
     }
 
     /**
@@ -64,7 +69,8 @@ public class Capabilities {
                 Collections.<Flash>emptySet(),
                 Collections.<Range<Integer>>emptySet(),
                 Ranges.<Integer>emptyRange(),
-                false
+                false,
+                null
         );
     }
 
@@ -121,6 +127,11 @@ public class Capabilities {
      */
     public boolean isZoomSupported() {
         return zoomSupported;
+    }
+
+    @Nullable
+    public Float getLensMinFocusDistance() {
+        return lensMinFocusDistance;
     }
 
     @Override
