@@ -17,7 +17,12 @@ public class CaptureResultTransformer implements Transformer<CaptureResult, Capt
 
     @Override
     public CaptureResultState transform(CaptureResult input) {
-        return CaptureResultState.Success(new CaptureMetadata(input.get(CaptureResult.LENS_FOCUS_DISTANCE)));
+        return CaptureResultState.Success(new CaptureMetadata(
+                input.get(CaptureResult.LENS_FOCUS_DISTANCE),
+                input.get(CaptureResult.SENSOR_SENSITIVITY),
+                input.get(CaptureResult.SENSOR_EXPOSURE_TIME),
+                input.get(CaptureResult.LENS_APERTURE)
+        ));
     }
 
 }
